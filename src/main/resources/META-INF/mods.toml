@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+
+license="All Rights Reserved"
+issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
+
+[[mods]]
+modId="cosmetic_package"
+version="1.0.0"
+displayName="Cosmetic Package"
+displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
+logoFile="cosmetic_package_banner.png"
+credits="MarbledHubb Studios"
+authors="MarbledNull, WereF0X"
+
+description='''A mod add-on for FNAF: MW that adds nightguard outfits'''
+
+[[dependencies.cosmetic_package]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.cosmetic_package]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
