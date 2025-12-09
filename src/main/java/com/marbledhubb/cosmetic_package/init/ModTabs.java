@@ -19,7 +19,7 @@ public class ModTabs {
                     .title(Component.translatable("itemGroup." + MODID + ".cosmetic_package_tab"))
                     .icon(() -> new ItemStack(ModItems.CLEAN_NIGHTGUARD_HELMET.get()))
                     .displayItems((displayParameters, output) -> {
-                        output.accept(ModItems.FAZ_FIT.get());
+                        output.accept(ModBlocks.FAZ_FIT.get());
 
                         output.accept(ModItems.DIRTY_NIGHTGUARD_HELMET.get());
                         output.accept(ModItems.DIRTY_NIGHTGUARD_CHESTPLATE.get());
