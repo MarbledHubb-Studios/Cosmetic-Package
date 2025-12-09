@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "IFR",
+    "CBC"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:copper_block"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "F": {
+      "item": "management_wanted:faz_buck"
+    }
+  },
+  "result": {
+    "id": "cosmetic_package:faz_fit",
+    "count": 1
+  }
+}

@@ -28,3 +28,17 @@ description='''A mod add-on for FNAF: MW that adds nightguard outfits'''
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.cosmetic_package]]
+    modId="management_wanted"
+    mandatory=true
+    versionRange="1.3.3"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.cosmetic_package]]
+    modId="geckolib"
+    mandatory=true
+    versionRange="4.8.2"
+    ordering="NONE"
+    side="BOTH"
