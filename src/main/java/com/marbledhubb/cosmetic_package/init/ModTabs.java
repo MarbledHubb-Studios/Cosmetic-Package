@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 import static com.marbledhubb.cosmetic_package.CosmeticPackage.MODID;
 
 public class ModTabs {
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CosmeticPackage.MODID);
 
     public static final RegistryObject<CreativeModeTab> COSMETIC_PACKAGE_TAB = CREATIVE_MODE_TABS.register("cosmetic_package_tab",
             () -> CreativeModeTab.builder()
@@ -23,26 +23,31 @@ public class ModTabs {
 
                         output.accept(ModItems.DIRTY_NIGHTGUARD_HELMET.get());
                         output.accept(ModItems.DIRTY_NIGHTGUARD_CHESTPLATE.get());
+                        output.accept(ModItems.DIRTY_NIGHTGUARD_SLIM_CHESTPLATE.get());
                         output.accept(ModItems.DIRTY_NIGHTGUARD_LEGGINGS.get());
                         output.accept(ModItems.DIRTY_NIGHTGUARD_BOOTS.get());
 
                         output.accept(ModItems.BUDGET_NIGHTGUARD_HELMET.get());
                         output.accept(ModItems.BUDGET_NIGHTGUARD_CHESTPLATE.get());
+                        output.accept(ModItems.BUDGET_NIGHTGUARD_SLIM_CHESTPLATE.get());
                         output.accept(ModItems.BUDGET_NIGHTGUARD_LEGGINGS.get());
                         output.accept(ModItems.BUDGET_NIGHTGUARD_BOOTS.get());
 
                         output.accept(ModItems.CLEAN_NIGHTGUARD_HELMET.get());
                         output.accept(ModItems.CLEAN_NIGHTGUARD_CHESTPLATE.get());
+                        output.accept(ModItems.CLEAN_NIGHTGUARD_SLIM_CHESTPLATE.get());
                         output.accept(ModItems.CLEAN_NIGHTGUARD_LEGGINGS.get());
                         output.accept(ModItems.CLEAN_NIGHTGUARD_BOOTS.get());
 
                         output.accept(ModItems.PIZZAPLEX_NIGHTGUARD_HELMET.get());
                         output.accept(ModItems.PIZZAPLEX_NIGHTGUARD_CHESTPLATE.get());
+                        output.accept(ModItems.PIZZAPLEX_NIGHTGUARD_SLIM_CHESTPLATE.get());
                         output.accept(ModItems.PIZZALEX_NIGHTGUARD_LEGGINGS.get());
                         output.accept(ModItems.PIZZAPLEX_NIGHTGUARD_BOOTS.get());
 
                         output.accept(ModItems.PURPLE_NIGHTGUARD_HELMET.get());
                         output.accept(ModItems.PURPLE_NIGHTGUARD_CHESTPLATE.get());
+                        output.accept(ModItems.PURPLE_NIGHTGUARD_SLIM_CHESTPLATE.get());
                         output.accept(ModItems.PURPLE_NIGHTGUARD_LEGGINGS.get());
                         output.accept(ModItems.PURPLE_NIGHTGUARD_BOOTS.get());
                     })

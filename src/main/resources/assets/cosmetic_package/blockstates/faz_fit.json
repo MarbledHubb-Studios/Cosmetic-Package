@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "cosmetic_package:block/faz_fit",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "cosmetic_package:block/faz_fit",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "cosmetic_package:block/faz_fit",
+      "y": 360
+    },
+    "facing=west": {
+      "model": "cosmetic_package:block/faz_fit",
+      "y": 90
+    }
+  }
+}

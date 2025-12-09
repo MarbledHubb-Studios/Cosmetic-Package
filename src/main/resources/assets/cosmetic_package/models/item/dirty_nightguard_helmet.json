@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "cosmetic_package:item/dirty_nightguard_helmet"
+  }
+}
