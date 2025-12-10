@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
+import net.ovdrstudios.mw.init.ManagementWantedModSounds;
 
 import java.util.function.Supplier;
 
@@ -49,7 +50,8 @@ public record FazFitButtonMessage(int buttonID, int x, int y, int z) {
             entity.displayClientMessage(Component.literal("Work in progress"), true);
         }
         if (buttonID == 2) {
-
+            //shop purchase sound when button clicked. for fazfit gui part 2, make it so it only plays when an outfit is successfully bought
+            //entity.playSound(ManagementWantedModSounds.SHOP_BUY.get(), 1, 1);
             entity.closeContainer();
             entity.displayClientMessage(Component.literal("Work in progress"), true);
         }
