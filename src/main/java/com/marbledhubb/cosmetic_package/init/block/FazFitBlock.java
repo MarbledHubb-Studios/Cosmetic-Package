@@ -1,9 +1,21 @@
 package com.marbledhubb.cosmetic_package.init.block;
 
+import com.marbledhubb.cosmetic_package.world.inventory.FazFitMenu;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -15,8 +27,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 
 import static net.minecraft.world.level.block.HopperBlock.FACING;
 import static net.minecraft.world.level.block.SculkSensorBlock.WATERLOGGED;
@@ -47,7 +61,7 @@ public class FazFitBlock extends Block {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 
-        for(Direction direction : pContext.getNearestLookingDirections()) {
+        for (Direction direction : pContext.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
                 BlockState blockstate = this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
 
@@ -72,5 +86,28 @@ public class FazFitBlock extends Block {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING);
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockstate, Level world, BlockPos pos, Player entity, InteractionHand hand, BlockHitResult hit) {
+        super.use(blockstate, world, pos, entity, hand, hit);
+
+        if (entity instanceof ServerPlayer serverPlayer) {
+            BlockPos _bpos = BlockPos.containing(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
+            NetworkHooks.openScreen((ServerPlayer) serverPlayer, new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return Component.literal("FazFit");
+                }
+
+                @Override
+                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+                    return new FazFitMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(_bpos));
+                }
+            }, _bpos);
+        }
+
+        return InteractionResult.SUCCESS;
+
     }
 }
