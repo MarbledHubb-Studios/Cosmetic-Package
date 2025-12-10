@@ -17,6 +17,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class CosmeticPackage
 {
     public static final String MODID = "cosmetic_package";
+    //why do noses run.. but feet smell?
 
     public CosmeticPackage(FMLJavaModLoadingContext context)
     {
