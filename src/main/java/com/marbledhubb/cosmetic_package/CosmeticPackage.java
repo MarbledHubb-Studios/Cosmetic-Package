@@ -1,9 +1,8 @@
 package com.marbledhubb.cosmetic_package;
 
-import com.marbledhubb.cosmetic_package.init.ModBlocks;
-import com.marbledhubb.cosmetic_package.init.ModItems;
-import com.marbledhubb.cosmetic_package.init.ModMenus;
-import com.marbledhubb.cosmetic_package.init.ModTabs;
+import com.marbledhubb.cosmetic_package.config.ArmorData;
+import com.marbledhubb.cosmetic_package.config.FazFitArmorPrices;
+import com.marbledhubb.cosmetic_package.init.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,6 +46,9 @@ public class CosmeticPackage
         ModBlocks.register(modEventBus);
         ModTabs.register(modEventBus);
         ModMenus.REGISTRY.register(modEventBus);
+        ModBlockEntities.REGISTRY.register(modEventBus);
+
+        FazFitArmorPrices.load();
 
     }
 

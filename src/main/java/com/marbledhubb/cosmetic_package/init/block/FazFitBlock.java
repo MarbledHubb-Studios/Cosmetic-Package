@@ -1,5 +1,6 @@
 package com.marbledhubb.cosmetic_package.init.block;
 
+import com.marbledhubb.cosmetic_package.config.ArmorType;
 import com.marbledhubb.cosmetic_package.world.inventory.FazFitMenu;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -109,5 +111,35 @@ public class FazFitBlock extends Block {
 
         return InteractionResult.SUCCESS;
 
+    }
+
+    public static ArmorType getArmorType(Player player, double x, double y, double z) {
+        BlockPos _bp = BlockPos.containing(x, y, z);
+        BlockEntity blockEntity = player.level().getBlockEntity(_bp);
+        String registry = "";
+        if (blockEntity != null)
+            registry = blockEntity.getPersistentData().getString("armorType");
+
+        return ArmorType.fromRegistry(registry);
+    }
+
+    public static void setArmorType(ArmorType armorType, Player player, double x, double y, double z) {
+        if (!player.level().isClientSide()) {
+            BlockPos _bp = BlockPos.containing(x, y, z);
+            BlockEntity _blockEntity = player.level().getBlockEntity(_bp);
+            BlockState _bs = player.level().getBlockState(_bp);
+            if (_blockEntity != null) {
+                _blockEntity.getPersistentData().putString("armorType", armorType.getRegistry());
+            }
+            player.level().sendBlockUpdated(_bp, _bs, _bs, 3);
+        }
+    }
+
+    public static void goToNextArmorType(Player player, double x, double y, double z) {
+        setArmorType(getArmorType(player, x, y ,z).next(), player, x, y, z);
+    }
+
+    public static void goToPreviousArmorType(Player player, double x, double y, double z) {
+        setArmorType(getArmorType(player, x, y ,z).prev(), player, x, y ,z);
     }
 }

@@ -95,7 +95,7 @@ public class FazFitMenu extends AbstractContainerMenu implements ModMenus.MenuAc
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ManagementWantedModItems.FAZ_BUCK.get() == stack.getItem();
+                return ManagementWantedModItems.FAZ_BUCK.get() == stack.getItem() || ManagementWantedModItems.FAZ_BUCK_STACK.get() == stack.getItem() ;
             }
         }));
         for (int si = 0; si < 3; ++si)
