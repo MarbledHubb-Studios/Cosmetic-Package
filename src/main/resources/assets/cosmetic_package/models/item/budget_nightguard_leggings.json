@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "cosmetic_package:item/budget_nightguard_leggings"
+  }
+}
