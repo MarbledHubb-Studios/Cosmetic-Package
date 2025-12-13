@@ -49,10 +49,9 @@ public record FazFitButtonMessage(int buttonID, int x, int y, int z) {
             FazFitBlock.goToPreviousArmorType(entity, x, y, z);
         }
         if (buttonID == 2) {
-            //shop purchase sound when button clicked. for fazfit gui part 2, make it so it only plays when an outfit is successfully bought
-            //entity.playSound(ManagementWantedModSounds.SHOP_BUY.get(), 1, 1);
-            entity.closeContainer();
-            entity.displayClientMessage(Component.literal("Work in progress"), true);
+
+            FazFitBlock.buyArmor(entity, x, y, z);
+
         }
     }
 

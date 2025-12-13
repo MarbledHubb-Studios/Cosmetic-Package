@@ -1,5 +1,11 @@
 package com.marbledhubb.cosmetic_package.config;
 
+import com.marbledhubb.cosmetic_package.util.ItemUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +108,7 @@ public enum ArmorType {
         return piecesRegistry;
     }
 
-    public int getPrice() {
+    public int getPriceAmount() {
 
         ArmorData prices = FazFitArmorPrices.get();
 
@@ -132,6 +138,48 @@ public enum ArmorType {
         }
 
         return 0;
+    }
+
+    public Item getPriceItem() {
+        ArmorData prices = FazFitArmorPrices.get();
+        String itemId = null;
+
+        if (isDirtyNightGuard()) {
+            itemId = prices.dirtyNightGuard.keySet().iterator().next();
+        } else if (isBudgetNightGuard()) {
+            itemId = prices.budgetNightGuard.keySet().iterator().next();
+        } else if (isCleanNightGuard()) {
+            itemId = prices.cleanNightGuard.keySet().iterator().next();
+        } else if (isPurpleNightGuard()) {
+            itemId = prices.purpleNightGuard.keySet().iterator().next();
+        } else if (isPizzaPlexNightGuard()) {
+            itemId = prices.pizzaPlexNightGuard.keySet().iterator().next();
+        }
+
+        if (itemId == null) return Items.AIR;
+
+        return ItemUtils.fromRegistryName(itemId);
+    }
+
+    public String getPriceItemString() {
+        ArmorData prices = FazFitArmorPrices.get();
+        String itemId = null;
+
+        if (isDirtyNightGuard()) {
+            itemId = prices.dirtyNightGuard.keySet().iterator().next();
+        } else if (isBudgetNightGuard()) {
+            itemId = prices.budgetNightGuard.keySet().iterator().next();
+        } else if (isCleanNightGuard()) {
+            itemId = prices.cleanNightGuard.keySet().iterator().next();
+        } else if (isPurpleNightGuard()) {
+            itemId = prices.purpleNightGuard.keySet().iterator().next();
+        } else if (isPizzaPlexNightGuard()) {
+            itemId = prices.pizzaPlexNightGuard.keySet().iterator().next();
+        }
+
+        if (itemId == null) return "";
+
+        return itemId;
     }
 
 }

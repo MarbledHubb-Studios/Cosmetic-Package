@@ -1,7 +1,10 @@
 package com.marbledhubb.cosmetic_package.init.block;
 
+import com.marbledhubb.cosmetic_package.CosmeticPackage;
 import com.marbledhubb.cosmetic_package.config.ArmorType;
+import com.marbledhubb.cosmetic_package.init.ModMenus;
 import com.marbledhubb.cosmetic_package.init.block.entity.FazFitBlockEntity;
+import com.marbledhubb.cosmetic_package.util.ItemUtils;
 import com.marbledhubb.cosmetic_package.world.inventory.FazFitMenu;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -13,9 +16,13 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -32,6 +39,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+import net.ovdrstudios.mw.init.ManagementWantedModSounds;
 
 import static net.minecraft.world.level.block.HopperBlock.FACING;
 import static net.minecraft.world.level.block.SculkSensorBlock.WATERLOGGED;
@@ -168,5 +176,67 @@ public class FazFitBlock extends Block implements EntityBlock {
             super.onRemove(state, world, pos, newState, isMoving);
         }
     }
+
+    public static void buyArmor(Player player, double x, double y, double z) {
+
+        ArmorType armorType = getArmorType(player, x , y, z);
+
+        ItemStack paySlotItem = ItemStack.EMPTY;
+        int paySlotAmount = 0;
+        paySlotItem = (player.containerMenu instanceof ModMenus.MenuAccessor _menu0 ? _menu0.getSlots().get(0).getItem() : ItemStack.EMPTY).copy();
+        paySlotAmount = getAmountInGUISlot(player, 0);
+
+        ItemStack priceItem = armorType.getPriceItem().getDefaultInstance();
+        int priceAmount = armorType.getPriceAmount();
+
+        if (!(ItemStack.isSameItem(priceItem, paySlotItem)) || priceAmount>paySlotAmount) {
+            return;
+        }
+
+        if (player.containerMenu instanceof ModMenus.MenuAccessor _menu) {
+            int newCount = paySlotAmount-priceAmount;
+            ItemStack newItem = paySlotItem.copy();
+            if (newCount<=0) {
+                newItem = Items.AIR.getDefaultInstance();
+                newCount = 0;
+            }
+            newItem.setCount(newCount);
+            _menu.getSlots().get(0).set(newItem);
+            player.containerMenu.broadcastChanges();
+        }
+
+        player.playSound(ManagementWantedModSounds.SHOP_BUY.get(), 1, 1);
+
+        int givenItems = 0;
+
+
+        for (int i=0; i<armorType.getPiecesRegistry().size(); i++) {
+
+            ItemStack armorPiece = ItemUtils.fromRegistryName(CosmeticPackage.MODID + ":" + armorType.getPiecesRegistry().get(i)).getDefaultInstance();
+
+            boolean added = player.getInventory().add(armorPiece);
+            if (!added || !armorPiece.isEmpty()) {
+                player.drop(armorPiece, false);
+            }
+
+            givenItems+=1;
+
+            if (givenItems>=armorType.getPiecesRegistry().size()) {
+                player.closeContainer();
+            }
+
+        }
+
+    }
+
+    private static int getAmountInGUISlot(Entity entity, int sltid) {
+        if (entity instanceof Player player && player.containerMenu instanceof ModMenus.MenuAccessor menuAccessor) {
+            ItemStack stack = menuAccessor.getSlots().get(sltid).getItem();
+            if (stack != null)
+                return stack.getCount();
+        }
+        return 0;
+    }
+
 
 }

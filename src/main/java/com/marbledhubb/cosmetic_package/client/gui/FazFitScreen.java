@@ -85,7 +85,7 @@ public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, Component.literal("" + FazFitBlock.getArmorType(entity, x, y, z).getPrice()), 47, 54, -1, false);
+        guiGraphics.drawString(this.font, Component.literal("" + FazFitBlock.getArmorType(entity, x, y, z).getPriceAmount()), 47, 54, -1, false);
     }
 
     @Override
