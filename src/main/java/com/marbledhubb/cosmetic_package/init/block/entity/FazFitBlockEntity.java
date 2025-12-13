@@ -1,6 +1,9 @@
 package com.marbledhubb.cosmetic_package.init.block.entity;
 
 import com.marbledhubb.cosmetic_package.init.ModBlockEntities;
+import com.marbledhubb.cosmetic_package.world.inventory.FazFitMenu;
+import io.netty.buffer.Unpooled;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.common.util.LazyOptional;
@@ -27,108 +30,108 @@ import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
 public class FazFitBlockEntity extends RandomizableContainerBlockEntity implements WorldlyContainer {
-	private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-	private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
+    private NonNullList<ItemStack> stacks = NonNullList.withSize(2, ItemStack.EMPTY);
+    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
 
-	public FazFitBlockEntity(BlockPos position, BlockState state) {
-		super(ModBlockEntities.FAZ_FIT_BLOCK_ENTITY.get(), position, state);
-	}
+    public FazFitBlockEntity(BlockPos position, BlockState state) {
+        super(ModBlockEntities.FAZ_FIT_BLOCK_ENTITY.get(), position, state);
+    }
 
-	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
-		if (!this.tryLoadLootTable(compound))
-			this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-		ContainerHelper.loadAllItems(compound, this.stacks);
-	}
+    @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        if (!this.tryLoadLootTable(compound))
+            this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(compound, this.stacks);
+    }
 
-	@Override
-	public void saveAdditional(CompoundTag compound) {
-		super.saveAdditional(compound);
-		if (!this.trySaveLootTable(compound)) {
-			ContainerHelper.saveAllItems(compound, this.stacks);
-		}
-	}
+    @Override
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        if (!this.trySaveLootTable(compound)) {
+            ContainerHelper.saveAllItems(compound, this.stacks);
+        }
+    }
 
-	@Override
-	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
-	@Override
-	public CompoundTag getUpdateTag() {
-		return this.saveWithFullMetadata();
-	}
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithFullMetadata();
+    }
 
-	@Override
-	public int getContainerSize() {
-		return stacks.size();
-	}
+    @Override
+    public int getContainerSize() {
+        return stacks.size();
+    }
 
-	@Override
-	public boolean isEmpty() {
-		for (ItemStack itemstack : this.stacks)
-			if (!itemstack.isEmpty())
-				return false;
-		return true;
-	}
+    @Override
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks)
+            if (!itemstack.isEmpty())
+                return false;
+        return true;
+    }
 
-	@Override
-	public Component getDefaultName() {
-		return Component.literal("FazFit");
-	}
+    @Override
+    public Component getDefaultName() {
+        return Component.literal("Faz-Fit");
+    }
 
-	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory inventory) {
-		return ChestMenu.threeRows(id, inventory);
-	}
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inventory) {
+        return new FazFitMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(this.worldPosition));
+    }
 
-	@Override
-	public Component getDisplayName() {
-		return Component.literal("FazFit");
-	}
+    @Override
+    public Component getDisplayName() {
+        return Component.literal("Faz-Fit");
+    }
 
-	@Override
-	protected NonNullList<ItemStack> getItems() {
-		return this.stacks;
-	}
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.stacks;
+    }
 
-	@Override
-	protected void setItems(NonNullList<ItemStack> stacks) {
-		this.stacks = stacks;
-	}
+    @Override
+    protected void setItems(NonNullList<ItemStack> stacks) {
+        this.stacks = stacks;
+    }
 
-	@Override
-	public boolean canPlaceItem(int index, ItemStack stack) {
-		return true;
-	}
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return true;
+    }
 
-	@Override
-	public int[] getSlotsForFace(Direction side) {
-		return IntStream.range(0, this.getContainerSize()).toArray();
-	}
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return IntStream.range(0, this.getContainerSize()).toArray();
+    }
 
-	@Override
-	public boolean canPlaceItemThroughFace(int index, ItemStack itemstack, @Nullable Direction direction) {
-		return this.canPlaceItem(index, itemstack);
-	}
+    @Override
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemstack, @Nullable Direction direction) {
+        return this.canPlaceItem(index, itemstack);
+    }
 
-	@Override
-	public boolean canTakeItemThroughFace(int index, ItemStack itemstack, Direction direction) {
-		return true;
-	}
+    @Override
+    public boolean canTakeItemThroughFace(int index, ItemStack itemstack, Direction direction) {
+        return true;
+    }
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-		if (!this.remove && facing != null && capability == ForgeCapabilities.ITEM_HANDLER)
-			return handlers[facing.ordinal()].cast();
-		return super.getCapability(capability, facing);
-	}
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (!this.remove && facing != null && capability == ForgeCapabilities.ITEM_HANDLER)
+            return handlers[facing.ordinal()].cast();
+        return super.getCapability(capability, facing);
+    }
 
-	@Override
-	public void setRemoved() {
-		super.setRemoved();
-		for (LazyOptional<? extends IItemHandler> handler : handlers)
-			handler.invalidate();
-	}
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        for (LazyOptional<? extends IItemHandler> handler : handlers)
+            handler.invalidate();
+    }
 }

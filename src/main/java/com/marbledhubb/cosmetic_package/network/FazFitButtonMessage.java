@@ -1,6 +1,7 @@
 package com.marbledhubb.cosmetic_package.network;
 
 import com.marbledhubb.cosmetic_package.CosmeticPackage;
+import com.marbledhubb.cosmetic_package.init.block.FazFitBlock;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -40,13 +41,11 @@ public record FazFitButtonMessage(int buttonID, int x, int y, int z) {
             return;
         if (buttonID == 0) {
 
-            entity.closeContainer();
-            entity.displayClientMessage(Component.literal("Work in progress"), true);
+            FazFitBlock.goToNextArmorType(entity, x, y, z);
         }
         if (buttonID == 1) {
 
-            entity.closeContainer();
-            entity.displayClientMessage(Component.literal("Work in progress"), true);
+            FazFitBlock.goToPreviousArmorType(entity, x, y, z);
         }
         if (buttonID == 2) {
 

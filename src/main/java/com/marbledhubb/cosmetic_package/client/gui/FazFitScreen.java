@@ -1,6 +1,9 @@
 package com.marbledhubb.cosmetic_package.client.gui;
 
 import com.marbledhubb.cosmetic_package.CosmeticPackage;
+import com.marbledhubb.cosmetic_package.config.ArmorType;
+import com.marbledhubb.cosmetic_package.config.FazFitArmorPrices;
+import com.marbledhubb.cosmetic_package.init.block.FazFitBlock;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -19,6 +22,8 @@ import com.marbledhubb.cosmetic_package.world.inventory.FazFitMenu;
 import com.marbledhubb.cosmetic_package.network.FazFitButtonMessage;
 import com.marbledhubb.cosmetic_package.init.ModScreens;
 
+import java.util.List;
+
 @SuppressWarnings("removal")
 public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements ModScreens.ScreenAccessor {
     private final Level world;
@@ -28,6 +33,8 @@ public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements
     private Button back_button;
     private Button next_button;
     private ImageButton purchase_button;
+    private final int armorPieceXConstant = 19;
+    private final List<Integer> armorPiecesX = List.of(armorPieceXConstant, armorPieceXConstant*2, armorPieceXConstant*3, armorPieceXConstant*4);
 
     public FazFitScreen(FazFitMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
@@ -61,6 +68,9 @@ public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         guiGraphics.blit(texture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        for (int i=0; i<FazFitBlock.getArmorType(entity, x, y, z).getPiecesRegistry().size(); i++) {
+            guiGraphics.blit(new ResourceLocation(CosmeticPackage.MODID + ":textures/item/" + FazFitBlock.getArmorType(entity, x, y, z).getPiecesRegistry().get(i) + ".png"), this.leftPos + armorPiecesX.get(i), this.topPos + 16, 0, 0, 16, 16, 16, 16);
+        }
         RenderSystem.disableBlend();
     }
 
@@ -75,13 +85,13 @@ public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, Component.literal("0"), 47, 54, -1, false);
+        guiGraphics.drawString(this.font, Component.literal("" + FazFitBlock.getArmorType(entity, x, y, z).getPrice()), 47, 54, -1, false);
     }
 
     @Override
     public void init() {
         super.init();
-        back_button = Button.builder(Component.literal("<<"), e -> {
+        back_button = Button.builder(Component.literal(">>"), e -> {
             int x = FazFitScreen.this.x;
             int y = FazFitScreen.this.y;
             if (true) {
@@ -90,7 +100,7 @@ public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements
             }
         }).bounds(this.leftPos + 154, this.topPos + 6, 18, 20).build();
         this.addRenderableWidget(back_button);
-        next_button = Button.builder(Component.literal(">>"), e -> {
+        next_button = Button.builder(Component.literal("<<"), e -> {
             int x = FazFitScreen.this.x;
             int y = FazFitScreen.this.y;
             if (true) {

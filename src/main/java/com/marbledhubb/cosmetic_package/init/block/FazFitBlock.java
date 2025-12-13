@@ -1,6 +1,7 @@
 package com.marbledhubb.cosmetic_package.init.block;
 
 import com.marbledhubb.cosmetic_package.config.ArmorType;
+import com.marbledhubb.cosmetic_package.init.block.entity.FazFitBlockEntity;
 import com.marbledhubb.cosmetic_package.world.inventory.FazFitMenu;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -8,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -18,10 +20,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -37,7 +36,7 @@ import net.minecraftforge.network.NetworkHooks;
 import static net.minecraft.world.level.block.HopperBlock.FACING;
 import static net.minecraft.world.level.block.SculkSensorBlock.WATERLOGGED;
 
-public class FazFitBlock extends Block {
+public class FazFitBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public FazFitBlock(Properties properties) {
@@ -93,25 +92,22 @@ public class FazFitBlock extends Block {
     @Override
     public InteractionResult use(BlockState blockstate, Level world, BlockPos pos, Player entity, InteractionHand hand, BlockHitResult hit) {
         super.use(blockstate, world, pos, entity, hand, hit);
-
-        if (entity instanceof ServerPlayer serverPlayer) {
-            BlockPos _bpos = BlockPos.containing(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
-            NetworkHooks.openScreen((ServerPlayer) serverPlayer, new MenuProvider() {
+        if (entity instanceof ServerPlayer player) {
+            NetworkHooks.openScreen(player, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return Component.literal("FazFit");
+                    return Component.literal("Faz-Fit");
                 }
 
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-                    return new FazFitMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(_bpos));
+                    return new FazFitMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos));
                 }
-            }, _bpos);
+            }, pos);
         }
-
         return InteractionResult.SUCCESS;
-
     }
+
 
     public static ArmorType getArmorType(Player player, double x, double y, double z) {
         BlockPos _bp = BlockPos.containing(x, y, z);
@@ -142,4 +138,35 @@ public class FazFitBlock extends Block {
     public static void goToPreviousArmorType(Player player, double x, double y, double z) {
         setArmorType(getArmorType(player, x, y ,z).prev(), player, x, y ,z);
     }
+
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
+        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+        return tileEntity instanceof MenuProvider menuProvider ? menuProvider : null;
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FazFitBlockEntity(pos, state);
+    }
+
+    @Override
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
+        super.triggerEvent(state, world, pos, eventID, eventParam);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        return blockEntity != null && blockEntity.triggerEvent(eventID, eventParam);
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof FazFitBlockEntity be) {
+                Containers.dropContents(world, pos, be);
+                world.updateNeighbourForOutputSignal(pos, this);
+            }
+            super.onRemove(state, world, pos, newState, isMoving);
+        }
+    }
+
 }

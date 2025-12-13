@@ -26,6 +26,10 @@ public enum ArmorType {
         return id;
     }
 
+    public boolean is(ArmorType armorType) {
+        return this == armorType;
+    }
+
     public boolean isDirtyNightGuard() {
         return this == DIRTY_NIGHTGUARD;
     }
@@ -87,14 +91,47 @@ public enum ArmorType {
         return piecesRegistry;
     }
 
-    public List<String> getPiecesRegistry(ArmorType armorType) {
+    public List<String> getPiecesRegistry() {
         List<String> suffixes = List.of("_helmet", "_chestplate", "_leggings", "_boots");
         List<String> piecesRegistry = new ArrayList<>(4);
 
         for (String suffix : suffixes) {
-            piecesRegistry.add(armorType.getRegistry() + suffix);
+            piecesRegistry.add(this.getRegistry() + suffix);
         }
 
         return piecesRegistry;
     }
+
+    public int getPrice() {
+
+        ArmorData prices = FazFitArmorPrices.get();
+
+        if (isDirtyNightGuard()) {
+            return prices.dirtyNightGuard
+                    .getOrDefault("management_wanted:faz_buck", 0);
+        }
+
+        if (isBudgetNightGuard()) {
+            return prices.budgetNightGuard
+                    .getOrDefault("management_wanted:faz_buck", 0);
+        }
+
+        if (isCleanNightGuard()) {
+            return prices.cleanNightGuard
+                    .getOrDefault("management_wanted:faz_buck", 0);
+        }
+
+        if (isPurpleNightGuard()) {
+            return prices.purpleNightGuard
+                    .getOrDefault("management_wanted:faz_buck", 0);
+        }
+
+        if (isPizzaPlexNightGuard()) {
+            return prices.pizzaPlexNightGuard
+                    .getOrDefault("management_wanted:faz_buck_stack", 0);
+        }
+
+        return 0;
+    }
+
 }
