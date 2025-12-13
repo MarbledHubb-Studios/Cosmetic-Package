@@ -33,7 +33,7 @@ public class FazFitScreen extends AbstractContainerScreen<FazFitMenu> implements
     private Button back_button;
     private Button next_button;
     private ImageButton purchase_button;
-    private final int armorPieceXConstant = 19;
+    private final int armorPieceXConstant = 27;
     private final List<Integer> armorPiecesX = List.of(armorPieceXConstant, armorPieceXConstant*2, armorPieceXConstant*3, armorPieceXConstant*4);
 
     public FazFitScreen(FazFitMenu container, Inventory inventory, Component text) {
